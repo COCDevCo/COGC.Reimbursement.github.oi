@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reimbursement Form</title>
+    <link rel="stylesheet" href="style.css">
+    <script async src="https://docs.opencv.org/3.4.0/opencv.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.0.0/dist/tesseract.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Reimbursement Form</h1>
+        <form id="reimbursementForm" enctype="multipart/form-data">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required><br>
+
+            <label for="idNumber">ID Number:</label>
+            <input type="text" id="idNumber" name="idNumber" required><br>
+
+            <label for="position">Position:</label>
+            <input type="text" id="position" name="position" required><br>
+
+            <label for="division">Division:</label>
+            <input type="text" id="division" name="division" required><br>
+
+            <label for="teamHead">Team Head:</label>
+            <input type="text" id="teamHead" name="teamHead" required><br>
+
+            <label for="month">Month:</label>
+            <input type="month" id="month" name="month" required><br>
+
+            <input type="hidden" id="imageData" name="imageData"><br>
+
+            <button type="button" id="captureButton">Take a Picture</button>
+            <video id="video" width="320" height="240" autoplay></video>
+            <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+
+            <label for="pid">PID:</label>
+            <input type="text" id="pid" name="pid" required><br>
+
+            <button type="submit">Submit</button>
+        </form>
+
+        <h2>Preview</h2>
+        <pre id="preview"></pre>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
