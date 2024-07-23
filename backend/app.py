@@ -10,7 +10,7 @@ import os
 app = Flask(__name__)
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-TOKEN = 'https://oauth2.googleapis.com/token'  # Replace with your actual access token
+TOKEN = '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'  # Replace with your actual access token
 
 # MongoDB connection setup
 client = MongoClient('mongodb://localhost:27017/')
@@ -57,7 +57,7 @@ def submit():
     collection.insert_one(document)
 
     # Construct the spreadsheet title
-    spreadsheet_title = f'Reimbursement_{month}'
+    spreadsheet_title = f'Petty Cash_{month}'
 
     # Update or create Google Sheets
     creds = Credentials(token=TOKEN, scopes=SCOPES)
@@ -102,9 +102,7 @@ def parse_amount_paid(text):
 def get_or_create_spreadsheet(service, title, name, id_number, position, division, team_head):
     # Check if the spreadsheet exists by title and return its ID
     try:
-        response = service.spreadsheets().create({
-            'properties': {'title': title}
-        }).execute()
+        response = service.spreadsheets().get(spreadsheetId=title).execute()
         return response['spreadsheetId']
     except:
         spreadsheet_id = create_spreadsheet(service, title)
