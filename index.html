@@ -9,8 +9,10 @@
     <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.0.0/dist/tesseract.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <header>
         <h1>Reimbursement Form</h1>
+    </header>
+    <div class="container">
         <form id="reimbursementForm" enctype="multipart/form-data">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required><br>
@@ -32,18 +34,14 @@
 
             <input type="hidden" id="imageData" name="imageData"><br>
 
-            <button type="button" id="captureButton">Take a Picture</button>
+            <button type="button" id="captureButton">Scan Receipt</button>
             <video id="video" width="320" height="240" autoplay></video>
             <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
-
-            <label for="pid">PID:</label>
-            <input type="text" id="pid" name="pid" required><br>
-
-            <button type="submit">Submit</button>
         </form>
 
         <h2>Preview</h2>
         <pre id="preview"></pre>
+        <button type="button" id="submitButton">Submit</button>
     </div>
     <script src="script.js"></script>
 </body>

@@ -34,11 +34,11 @@ document.getElementById('captureButton').addEventListener('click', function() {
         });
 });
 
-document.getElementById('reimbursementForm').addEventListener('submit', async function(event) {
+document.getElementById('submitButton').addEventListener('click', async function(event) {
     event.preventDefault();
 
-    const formData = new FormData(this);
-    formData.append('image', dataURItoBlob(formData.get('imageData')));
+    const formData = new FormData(document.getElementById('reimbursementForm'));
+    formData.append('image', dataURItoBlob(document.getElementById('imageData').value));
 
     const response = await fetch('http://localhost:5000/submit', {
         method: 'POST',
