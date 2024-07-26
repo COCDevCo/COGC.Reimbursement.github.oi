@@ -5,12 +5,13 @@ import io
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from pymongo import MongoClient
+import re
 import os
 
 app = Flask(__name__)
 
 SCOPES = ['https://www.googleapis.com/auth/spreadsheets']
-TOKEN = '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'  # Replace with your actual access token
+TOKEN = 'your_google_access_token'  # Replace with your actual access token
 
 # MongoDB connection setup
 client = MongoClient('mongodb://localhost:27017/')
@@ -89,15 +90,36 @@ def preprocess_image(image):
 
 def parse_or_number(text):
     # Implement parsing logic for OR number
-    return "Sample OR Number"
+    or_patterns = [
+        r'\b(?:ticket number|OR number|official receipt number|official receipt|OR)\b[:\s]*([\w-]+)',
+    ]
+    for pattern in or_patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    return "Unknown OR Number"
 
 def parse_date_time(text):
     # Implement parsing logic for date and time
-    return "2023-10-01 10:00 AM"
+    date_patterns = [
+        r'\b(?:date|time of the ticket|datetime)\b[:\s]*([\d/:-\s]+)',
+    ]
+    for pattern in date_patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    return "Unknown Date Time"
 
 def parse_amount_paid(text):
     # Implement parsing logic for amount paid
-    return "100.00"
+    amount_patterns = [
+        r'\b(?:amount paid|total amount paid|total|cash|total cash|total amount)\b[:\s]*([\d.,]+)',
+    ]
+    for pattern in amount_patterns:
+        match = re.search(pattern, text, re.IGNORECASE)
+        if match:
+            return match.group(1)
+    return "0.00"
 
 def get_or_create_spreadsheet(service, title, name, id_number, position, division, team_head):
     # Check if the spreadsheet exists by title and return its ID
