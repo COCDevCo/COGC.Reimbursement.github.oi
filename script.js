@@ -9,6 +9,7 @@ document.getElementById('captureButton').addEventListener('click', function() {
             video.srcObject = stream;
             video.play();
 
+            // Capture the image when the video is clicked
             video.addEventListener('click', () => {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
                 const imageData = canvas.toDataURL('image/png');
@@ -25,7 +26,14 @@ document.getElementById('captureButton').addEventListener('click', function() {
                         logger: m => console.log(m)
                     }
                 ).then(({ data: { text } }) => {
-                    preview.textContent = text;
+                    const parsedData = parseOCRResult(text);
+                    preview.innerHTML = `
+                        <b>OCR Result:</b><br>
+                        <b>OR Number:</b> ${parsedData.orNumber}<br>
+                        <b>Date:</b> ${parsedData.date}<br>
+                        <b>Time:</b> ${parsedData.time}<br>
+                        <b>Amount Paid:</b> ${parsedData.amountPaid}<br>
+                    `;
                 });
             });
         })
@@ -58,4 +66,59 @@ function dataURItoBlob(dataURI) {
         ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ab], { type: mimeString });
+}
+
+function parseOCRResult(text) {
+    // Implement parsing logic for OR number, date, time, and amount paid
+    const orNumber = extractORNumber(text);
+    const dateTime = extractDateTime(text);
+    const amountPaid = extractAmountPaid(text);
+    
+    const [date, time] = dateTime.split(' ');
+
+    return {
+        orNumber,
+        date,
+        time,
+        amountPaid
+    };
+}
+
+function extractORNumber(text) {
+    const orPatterns = [
+        /\b(?:ticket number|OR number|official receipt number|official receipt|OR)\b[:\s]*([\w-]+)/i
+    ];
+    for (const pattern of orPatterns) {
+        const match = text.match(pattern);
+        if (match) {
+            return match[1];
+        }
+    }
+    return "Unknown OR Number";
+}
+
+function extractDateTime(text) {
+    const datePatterns = [
+        /\b(?:date|time of the ticket|datetime)\b[:\s]*([\d/:-\s]+)/i
+    ];
+    for (const pattern of datePatterns) {
+        const match = text.match(pattern);
+        if (match) {
+            return match[1];
+        }
+    }
+    return "Unknown Date Time";
+}
+
+function extractAmountPaid(text) {
+    const amountPatterns = [
+        /\b(?:amount paid|total amount paid|total|cash|total cash|total amount)\b[:\s]*([\d.,]+)/i
+    ];
+    for (const pattern of amountPatterns) {
+        const match = text.match(pattern);
+        if (match) {
+            return match[1];
+        }
+    }
+    return "0.00";
 }
